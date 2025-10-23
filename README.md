@@ -37,5 +37,5 @@
 
 1. **克隆项目**
 ```bash
-git clone https://github.com/yourusername/douyin-monitor.git
-cd douyin-monitor
+git clone git@github.com:s13230386002/dyzy.git
+cd dyzy
