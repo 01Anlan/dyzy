@@ -2,11 +2,10 @@
 
 🎯 抖音主页解析工具
 
-https://img.shields.io/badge/PHP-7.4%2B-blue.svg
-https://img.shields.io/badge/License-MIT-green.svg
-https://img.shields.io/github/stars/yourusername/douyin-monitor.svg
-https://img.shields.io/github/forks/yourusername/douyin-monitor.svg
-
+[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/yourusername/douyin-monitor.svg)](https://github.com/yourusername/douyin-monitor/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/yourusername/douyin-monitor.svg)](https://github.com/yourusername/douyin-monitor/network)
 一个功能强大的抖音主页内容自动监控系统，支持实时内容更新检测、邮件通知和自动化下载。
 
 ✨ 特性
