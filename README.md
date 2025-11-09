@@ -1,34 +1,56 @@
-抖音主页解析工具
+# 抖音主页解析工具
 
-🎯 抖音主页解析工具
+🎯 抖音主页内容自动监控与解析系统
 
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/yourusername/douyin-monitor.svg)](https://github.com/01Anlan/dyzy/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/yourusername/douyin-monitor.svg)](https://github.com/01Anlan/dyzy/network)
-一个功能强大的抖音主页内容自动监控系统，支持实时内容更新检测、邮件通知和自动化下载。
+[![GitHub Stars](https://img.shields.io/github/stars/01Anlan/dyzy.svg)](https://github.com/01Anlan/dyzy/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/01Anlan/dyzy.svg)](https://github.com/01Anlan/dyzy/network)
 
-✨ 特性
+一个功能强大的抖音主页内容自动监控系统，支持实时内容更新检测、邮件通知、自动化下载和数据库管理。
 
-🚀 核心功能
+## ✨ 核心特性
 
-· 🔄 自动监控 - 定时检查抖音主页内容更新
-· 📧 智能通知 - 支持邮件通知，多种触发条件
-· 💾 自动下载 - 发现新内容自动保存到本地
-· 📊 状态监控 - 实时查看监控状态和历史记录
+### 🚀 主要功能
+- **🔄 智能解析** - 自动解析抖音主页视频和图片链接
+- **📧 邮件通知** - 支持SMTP邮件通知，多种触发条件
+- **💾 自动下载** - 发现新内容自动保存到本地文件
+- **📊 状态监控** - 实时查看系统运行状态和历史记录
+- **🛡️ 自动更新** - 基于计划任务的自动内容更新监控
 
-🎨 用户体验
+### 🎨 用户体验
+- **📱 响应式界面** - 完美适配桌面和移动设备
+- **🎯 精美邮件模板** - 专业的SVG图标和现代化设计
+- **⚙️ 灵活配置** - 支持自定义监控间隔和文件命名
+- **🔍 文件预览** - 在线预览已保存的文件内容
 
-· 📱 响应式界面 - 完美适配桌面和移动设备
-· 🎯 精美邮件模板 - 专业的SVG图标和现代化设计
-· ⚙️ 灵活配置 - 支持自定义监控间隔和文件命名
+### 🔧 技术特性
+- **💽 数据库存储** - 使用MySQL数据库存储解析记录和配置
+- **📨 多邮件支持** - 集成PHPMailer和备用邮件方案
+- **🛡️ 错误处理** - 完善的异常处理和日志记录系统
+- **🔒 安全防护** - 文件路径安全检查和输入验证
 
-🔧 技术特性
+## 🛠️ 系统架构
 
-· 📨 多邮件支持 - 集成PHPMailer和备用邮件方案
-· 🛡️ 错误处理 - 完善的异常处理和日志记录
-· 💽 文件存储 - 使用JSON文件存储，无需数据库
+### 核心文件说明
 
+| 文件 | 功能描述 |
+|------|----------|
+| `index.html` | 主界面，提供用户交互界面 |
+| `Douyin.php` | 抖音链接解析核心功能 |
+| `auto_update.php` | 自动更新管理接口 |
+| `cron_auto_update.php` | 计划任务执行脚本 |
+| `file_manager.php` | 文件管理功能 |
+| `manage_records.php` | 解析记录管理 |
+| `file_preview.php` | 文件预览功能 |
+| `config.php` | 数据库配置 |
+
+### 数据库结构
+
+```sql
+-- 解析记录表 (parse_records)
+-- 自动更新日志表 (auto_update_logs)  
+-- 邮件配置表 (email_configs)
 🛠️ 安装部署
 
 环境要求
