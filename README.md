@@ -117,7 +117,6 @@ php -m | grep curl
 
 主要配置文件说明：
 
-```php
 // config.php
 $config = [
     'smtp_host' => 'smtp.qq.com',
@@ -126,7 +125,6 @@ $config = [
     'smtp_username' => 'your-email@qq.com',
     'smtp_password' => 'your-auth-code'
 ];
-```
 
 🔧 故障排除
 
