@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>抖音主页链接解析工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css" />
+    <link href="css/style.css" rel="stylesheet">
+    </style>
 </head>
 <body>
     <!-- 帮助按钮 -->
@@ -56,9 +57,86 @@
                             <p><strong>任务类型：</strong>Shell脚本</p>
                             <p><strong>执行周期：</strong>推荐每30分钟执行一次</p>
                             <p><strong>脚本内容：</strong></p>
-                            <pre><code>cd /www/wwwroot/video.zhcnli.top/dyzy_v2/
+                            <pre><code id="auto-domain-path">cd /www/wwwroot/YOUR_DOMAIN_HERE/
 /usr/bin/php cron_auto_update.php</code></pre>
+                            <button class="btn btn-copy" onclick="copyCommand()" style="margin: 10px 0; padding: 8px 16px; cursor: pointer;">
+                                <i class="fas fa-copy"></i> 复制命令
+                            </button>
                             <p><strong>说明：</strong>系统会自动监控所有已开启"自动更新"的抖音主页，只有发现新内容时才会更新文件和发送邮件通知。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 邮件通知设置 -->
+            <div class="email-notification-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-envelope"></i> 邮件通知设置</h3>
+                </div>
+                
+                <div class="email-controls">
+                    <div class="email-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="emailNotification">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>启用邮件通知</span>
+                    </div>
+                    
+                    <div class="email-settings" id="emailSettings" style="display: none;">
+                        <div class="input-group">
+                            <label for="emailAddress"><i class="fas fa-envelope"></i> 接收邮箱</label>
+                            <input type="email" id="emailAddress" placeholder="输入接收通知的邮箱地址">
+                        </div>
+                        <div class="input-group">
+                            <label for="emailCondition"><i class="fas fa-bell"></i> 通知条件</label>
+                            <select id="emailCondition">
+                                <option value="new_content" selected>只有新内容时通知</option>
+                                <option value="always">每次检查都通知</option>
+                                <option value="error">只有出错时通知</option>
+                            </select>
+                        </div>
+                        
+                        <div class="smtp-config">
+                            <h5><i class="fas fa-cog"></i> SMTP服务器配置</h5>
+                            <div class="smtp-grid">
+                                <div class="input-group">
+                                    <label for="smtpHost"><i class="fas fa-server"></i> SMTP服务器</label>
+                                    <input type="text" id="smtpHost" placeholder="smtp.qq.com">
+                                </div>
+                                <div class="input-group">
+                                    <label for="smtpPort"><i class="fas fa-plug"></i> 端口</label>
+                                    <input type="number" id="smtpPort" placeholder="465" value="465">
+                                </div>
+                                <div class="input-group">
+                                    <label for="smtpUsername"><i class="fas fa-user"></i> 邮箱账号</label>
+                                    <input type="text" id="smtpUsername" placeholder="your-email@qq.com">
+                                </div>
+                                <div class="input-group">
+                                    <label for="smtpPassword"><i class="fas fa-lock"></i> 授权码/密码</label>
+                                    <input type="password" id="smtpPassword" placeholder="输入SMTP授权码">
+                                </div>
+                                <div class="input-group">
+                                    <label for="smtpEncryption"><i class="fas fa-shield-alt"></i> 加密方式</label>
+                                    <select id="smtpEncryption">
+                                        <option value="ssl">SSL</option>
+                                        <option value="tls">TLS</option>
+                                        <option value="">无加密</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="fromName"><i class="fas fa-signature"></i> 发件人名称</label>
+                                    <input type="text" id="fromName" placeholder="抖音监控系统" value="抖音监控系统">
+                                </div>
+                            </div>
+                            <div class="smtp-actions">
+                                <button class="btn btn-info" id="testEmailBtn">
+                                    <i class="fas fa-paper-plane"></i> 测试邮件发送
+                                </button>
+                                <button class="btn btn-success" id="saveSmtpBtn">
+                                    <i class="fas fa-save"></i> 保存SMTP配置
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -265,11 +343,15 @@
                     </li>
                     <li>
                         <strong>自动更新功能：</strong>
-                        通过宝塔计划任务自动监控已开启自动更新的抖音主页，只有发现新内容时才会更新。
+                        通过宝塔计划任务自动监控抖音主页，只有发现新内容时才更新文件和发送邮件通知。
                     </li>
                     <li>
                         <strong>邮件通知：</strong>
                         开启后，系统会在检测到新内容时发送邮件通知。
+                    </li>
+                    <li>
+                        <strong>SMTP配置：</strong>
+                        需要正确配置SMTP服务器信息才能发送邮件通知。
                     </li>
                     <li>
                         <strong>数据库记录：</strong>
