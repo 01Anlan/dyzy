@@ -28,6 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const statusInfo = document.getElementById('statusInfo');
             const historyList = document.getElementById('historyList');
             
+            // 邮件通知相关元素
+            const emailNotification = document.getElementById('emailNotification');
+            const emailSettings = document.getElementById('emailSettings');
+            const emailAddress = document.getElementById('emailAddress');
+            const emailCondition = document.getElementById('emailCondition');
+            const testEmailBtn = document.getElementById('testEmailBtn');
+            const saveSmtpBtn = document.getElementById('saveSmtpBtn');
+            const smtpHost = document.getElementById('smtpHost');
+            const smtpPort = document.getElementById('smtpPort');
+            const smtpUsername = document.getElementById('smtpUsername');
+            const smtpPassword = document.getElementById('smtpPassword');
+            const smtpEncryption = document.getElementById('smtpEncryption');
+            const fromName = document.getElementById('fromName');
+            
             // 弹窗相关元素
             const helpModal = document.getElementById('helpModal');
             const helpTrigger = document.getElementById('helpTrigger');
@@ -45,6 +59,26 @@ document.addEventListener('DOMContentLoaded', function() {
             let currentDownloadUrl = '';
             let parseAttempts = 0;
             let currentPreviewFile = '';
+
+            // 更新计划任务命令中的域名
+            function updatePlanTaskCommand() {
+                const currentDomain = window.location.hostname;
+                const codeElement = document.getElementById('auto-domain-path');
+                const fullCommand = `cd /www/wwwroot/${currentDomain}/\n/usr/bin/php cron_auto_update.php`;
+                codeElement.textContent = fullCommand;
+            }
+
+            // 复制命令函数
+            window.copyCommand = function() {
+                const codeElement = document.getElementById('auto-domain-path');
+                const fullCommand = codeElement.textContent;
+                
+                navigator.clipboard.writeText(fullCommand).then(() => {
+                    showSuccess('命令已复制到剪贴板！');
+                }).catch(() => {
+                    showError('复制失败，请手动复制。');
+                });
+            };
 
             // 显示错误消息
             function showError(message) {
@@ -125,6 +159,139 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (helpModal.style.display === 'block') closeModalFunc();
                     if (previewModal.style.display === 'block') closePreviewModalFunc();
                 }
+            });
+
+            // 邮件通知开关
+            emailNotification.addEventListener('change', function() {
+                if (this.checked) {
+                    emailSettings.style.display = 'block';
+                    loadEmailConfig(); // 加载已保存的配置
+                } else {
+                    emailSettings.style.display = 'none';
+                }
+            });
+
+            // 加载邮件配置
+            function loadEmailConfig() {
+                fetch('auto_update.php?action=get_email_config&t=' + Date.now())
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 1 && data.data) {
+                            const config = data.data;
+                            smtpHost.value = config.smtp_host || '';
+                            smtpPort.value = config.smtp_port || '465';
+                            smtpUsername.value = config.smtp_username || '';
+                            smtpPassword.value = config.smtp_password || '';
+                            smtpEncryption.value = config.smtp_encryption || 'ssl';
+                            fromName.value = config.from_name || '抖音监控系统';
+                            emailAddress.value = config.smtp_username || '';
+                            
+                            // 自动开启邮件通知
+                            emailNotification.checked = true;
+                            emailSettings.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('加载邮件配置失败:', error);
+                    });
+            }
+
+            // 测试邮件发送
+            testEmailBtn.addEventListener('click', function() {
+                const emailAddr = emailAddress.value.trim();
+                const smtpHostVal = smtpHost.value.trim();
+                const smtpPortVal = smtpPort.value.trim();
+                const smtpUsernameVal = smtpUsername.value.trim();
+                const smtpPasswordVal = smtpPassword.value.trim();
+                
+                if (!emailAddr) {
+                    showError('请输入接收邮箱地址');
+                    return;
+                }
+                
+                if (!smtpHostVal || !smtpPortVal || !smtpUsernameVal || !smtpPasswordVal) {
+                    showError('请填写完整的SMTP配置信息');
+                    return;
+                }
+                
+                const params = new URLSearchParams({
+                    action: 'test_email',
+                    email_address: emailAddr,
+                    smtp_host: smtpHostVal,
+                    smtp_port: smtpPortVal,
+                    smtp_username: smtpUsernameVal,
+                    smtp_password: smtpPasswordVal,
+                    smtp_encryption: smtpEncryption.value,
+                    from_name: fromName.value || '抖音监控系统'
+                });
+                
+                testEmailBtn.disabled = true;
+                testEmailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
+                
+                fetch(`auto_update.php?${params.toString()}&t=${Date.now()}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        testEmailBtn.disabled = false;
+                        testEmailBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 测试邮件发送';
+                        
+                        if (data.code === 1) {
+                            showSuccess('测试邮件发送成功！请检查您的邮箱。');
+                        } else {
+                            showError('测试邮件发送失败: ' + data.msg);
+                        }
+                    })
+                    .catch(error => {
+                        testEmailBtn.disabled = false;
+                        testEmailBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 测试邮件发送';
+                        showError('测试邮件发送失败: ' + error.message);
+                    });
+            });
+
+            // 保存SMTP配置
+            saveSmtpBtn.addEventListener('click', function() {
+                const smtpHostVal = smtpHost.value.trim();
+                const smtpPortVal = smtpPort.value.trim();
+                const smtpUsernameVal = smtpUsername.value.trim();
+                const smtpPasswordVal = smtpPassword.value.trim();
+                
+                if (!smtpHostVal || !smtpPortVal || !smtpUsernameVal || !smtpPasswordVal) {
+                    showError('请填写完整的SMTP配置信息');
+                    return;
+                }
+                
+                const params = new URLSearchParams({
+                    action: 'save_smtp',
+                    smtp_host: smtpHostVal,
+                    smtp_port: smtpPortVal,
+                    smtp_username: smtpUsernameVal,
+                    smtp_password: smtpPasswordVal,
+                    smtp_encryption: smtpEncryption.value,
+                    from_name: fromName.value || '抖音监控系统'
+                });
+                
+                saveSmtpBtn.disabled = true;
+                saveSmtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 保存中...';
+                
+                fetch(`auto_update.php?${params.toString()}&t=${Date.now()}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        saveSmtpBtn.disabled = false;
+                        saveSmtpBtn.innerHTML = '<i class="fas fa-save"></i> 保存SMTP配置';
+                        
+                        if (data.code === 1) {
+                            showSuccess('SMTP配置保存成功！');
+                            // 自动开启邮件通知
+                            emailNotification.checked = true;
+                            emailSettings.style.display = 'block';
+                        } else {
+                            showError('SMTP配置保存失败: ' + data.msg);
+                        }
+                    })
+                    .catch(error => {
+                        saveSmtpBtn.disabled = false;
+                        saveSmtpBtn.innerHTML = '<i class="fas fa-save"></i> 保存SMTP配置';
+                        showError('SMTP配置保存失败: ' + error.message);
+                    });
             });
 
             // 加载文件列表
@@ -337,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data.code === 1 && data.data) {
                             const status = data.data;
                             if (status.total_records > 0) {
-                                statusInfo.textContent = `正在监控 ${status.total_records} 个记录 | 上次检查: ${status.last_check || '从未'} | 更新次数: ${status.update_count || 0}`;
+                                statusInfo.textContent = `正在监控 ${status.total_records} 个记录 | 上次检查: ${status.last_check || '从未'}`;
                             } else {
                                 statusInfo.textContent = '暂无开启自动更新的记录';
                             }
@@ -616,4 +783,6 @@ document.addEventListener('DOMContentLoaded', function() {
             loadFileList();
             loadRecords();
             loadAutoUpdateStatus();
+            loadEmailConfig(); // 加载邮件配置
+            updatePlanTaskCommand(); // 更新计划任务命令
         });
