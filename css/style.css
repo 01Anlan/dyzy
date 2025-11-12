@@ -1,4 +1,4 @@
-* {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -622,7 +622,7 @@
             box-shadow: 0 0 0 2px rgba(254, 44, 85, 0.1);
         }
 
-        /* 自动更新区域样式 */
+        /* 自动更新状态区域样式 */
         .auto-update-section {
             background: white;
             border-radius: 12px;
@@ -674,7 +674,6 @@
 
         .status-indicator i {
             color: #10b981;
-            animation: pulse 2s infinite;
         }
 
         .status-info {
@@ -770,10 +769,61 @@
             background: #f8f9fa;
             padding: 12px;
             border-radius: 6px;
-            overflow-x: auto;
             margin: 8px 0;
-            font-family: 'Courier New', monospace;
+            overflow-x: auto;
             font-size: 13px;
+        }
+
+        /* 邮件通知设置样式 */
+        .email-notification-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5e9;
+        }
+
+        .email-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .email-settings {
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+        }
+
+        .smtp-config {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .smtp-config h5 {
+            margin: 0 0 16px 0;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .smtp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .smtp-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-start;
         }
 
         /* 解析记录管理样式 */
@@ -883,11 +933,6 @@
             transform: translateX(26px);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
         /* 响应式设计 */
         @media (max-width: 768px) {
             .file-item, .record-item {
@@ -934,5 +979,13 @@
             .record-meta {
                 flex-direction: column;
                 gap: 5px;
+            }
+
+            .smtp-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .smtp-actions {
+                flex-direction: column;
             }
         }
