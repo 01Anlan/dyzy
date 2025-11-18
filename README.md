@@ -36,7 +36,7 @@
 
 | 文件 | 功能描述 |
 |------|----------|
-| `index.html` | 主界面，提供用户交互界面 |
+| `index.php` | 主界面，提供用户交互界面 |
 | `Douyin.php` | 抖音链接解析核心功能 |
 | `auto_update.php` | 自动更新管理接口 |
 | `cron_auto_update.php` | 计划任务执行脚本 |
