@@ -1,9 +1,5 @@
-CREATE DATABASE IF NOT EXISTS douyin_parser DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE douyin_parser;
-
 -- 解析记录表
-CREATE TABLE parse_records (
+CREATE TABLE IF NOT EXISTS parse_records (
     id INT PRIMARY KEY AUTO_INCREMENT,
     douyin_url VARCHAR(500) NOT NULL,
     custom_filename VARCHAR(255) NOT NULL,
@@ -20,7 +16,7 @@ CREATE TABLE parse_records (
 );
 
 -- 自动更新日志表
-CREATE TABLE auto_update_logs (
+CREATE TABLE IF NOT EXISTS auto_update_logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     record_id INT NOT NULL,
     status ENUM('success', 'error') NOT NULL,
@@ -33,7 +29,7 @@ CREATE TABLE auto_update_logs (
 );
 
 -- 邮件通知配置表
-CREATE TABLE email_configs (
+CREATE TABLE IF NOT EXISTS email_configs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     smtp_host VARCHAR(255) NOT NULL,
     smtp_port INT NOT NULL DEFAULT 465,
