@@ -162,7 +162,7 @@ A:尝试更换抖音主页链接，确保链接格式正确。
 
 · 提交 Issue: GitHub Issues
 · 邮箱联系: zhcnli@qq.com
-· 微信：[![](http://pic.zhcnli.cn/i/2026/01/16/696a352bb9e21.png)](http://pic.zhcnli.cn/i/2026/01/16/696a352bb9e21.png)
+· 微信：[![](https://upinc.zhcnli.cn/2026/01/16/696a483f1506d.png)](https://upinc.zhcnli.cn/2026/01/16/696a483f1506d.png)
 
 🙏 致谢
 
