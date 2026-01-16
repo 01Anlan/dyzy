@@ -116,7 +116,7 @@ php -m | grep curl
 ⚙️ 配置文件
 
 主要配置文件说明：
-
+```bash
 // config.php
 $config = [
     'smtp_host' => 'smtp.qq.com',
@@ -125,7 +125,7 @@ $config = [
     'smtp_username' => 'your-email@qq.com',
     'smtp_password' => 'your-auth-code'
 ];
-
+```
 🔧 故障排除
 
 常见问题
@@ -172,3 +172,4 @@ A:尝试更换抖音主页链接，确保链接格式正确。
 ---
 
 如果这个项目对你有帮助，请给个 ⭐ 星标支持！
+
