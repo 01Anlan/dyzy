@@ -1,6 +1,6 @@
 # 抖音主页解析工具
 
-🎯 抖音主页内容自动监控与解析系统
+🎯 【正在重构】抖音主页内容自动监控与解析系统
 
 [![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
