@@ -1,0 +1,126 @@
+<?php
+
+declare(strict_types=1);
+
+namespace AlibabaCloud\Oss\V2\Models;
+
+use AlibabaCloud\Oss\V2\Types\Model;
+use AlibabaCloud\Oss\V2\Annotation\XmlElement;
+use AlibabaCloud\Oss\V2\Annotation\XmlRoot;
+
+/**
+ * Class ReplicationRule
+ * @package AlibabaCloud\Oss\V2\Models
+ */
+#[XmlRoot(name: 'ReplicationRule')]
+final class ReplicationRule extends Model
+{
+    /**
+     * The status of the data replication task. Valid values:*   starting: OSS creates a data replication task after a data replication rule is configured.*   doing: The replication rule is effective and the replication task is in progress.*   closing: OSS clears a data replication task after the corresponding data replication rule is deleted.
+     * @var string|null
+     */
+    #[XmlElement(rename: 'Status', type: 'string')]
+    public ?string $status;
+
+    /**
+     * The container that specifies other conditions used to filter the source objects that you want to replicate. Filter conditions can be specified only for source objects encrypted by using SSE-KMS.
+     * @var ReplicationSourceSelectionCriteria|null
+     */
+    #[XmlElement(rename: 'SourceSelectionCriteria', type: ReplicationSourceSelectionCriteria::class)]
+    public ?ReplicationSourceSelectionCriteria $sourceSelectionCriteria;
+
+    /**
+     * The ID of the rule.
+     * @var string|null
+     */
+    #[XmlElement(rename: 'ID', type: 'string')]
+    public ?string $id;
+
+    /**
+     * The container that stores prefixes. You can specify up to 10 prefixes in each data replication rule.
+     * @var ReplicationPrefixSet|null
+     */
+    #[XmlElement(rename: 'PrefixSet', type: ReplicationPrefixSet::class)]
+    public ?ReplicationPrefixSet $prefixSet;
+
+    /**
+     * The operations that can be synchronized to the destination bucket. If you configure Action in a data replication rule, OSS synchronizes new data and historical data based on the specified value of Action. You can set Action to one or more of the following operation types. Valid values:*   ALL (default): PUT, DELETE, and ABORT operations are synchronized to the destination bucket.*   PUT: Write operations are synchronized to the destination bucket, including PutObject, PostObject, AppendObject, CopyObject, PutObjectACL, InitiateMultipartUpload, UploadPart, UploadPartCopy, and CompleteMultipartUpload.
+     * @var string|null
+     */
+    #[XmlElement(rename: 'Action', type: 'string')]
+    public ?string $action;
+
+    /**
+     * The container that stores the information about the destination bucket.
+     * @var ReplicationDestination|null
+     */
+    #[XmlElement(rename: 'Destination', type: ReplicationDestination::class)]
+    public ?ReplicationDestination $destination;
+
+    /**
+     * Specifies whether to replicate historical data that exists before data replication is enabled from the source bucket to the destination bucket. Valid values:*   enabled (default): replicates historical data to the destination bucket.*   disabled: does not replicate historical data to the destination bucket. Only data uploaded to the source bucket after data replication is enabled for the source bucket is replicated.
+     * Sees HistoricalObjectReplicationType for supported values.
+     * @var string|null
+     */
+    #[XmlElement(rename: 'HistoricalObjectReplication', type: 'string')]
+    public ?string $historicalObjectReplication;
+
+    /**
+     * The role that you want to authorize OSS to use to replicate data. If you want to use SSE-KMS to encrypt the objects that are replicated to the destination bucket, you must specify this parameter.
+     * @var string|null
+     */
+    #[XmlElement(rename: 'SyncRole', type: 'string')]
+    public ?string $syncRole;
+
+    /**
+     * The encryption configuration for the objects replicated to the destination bucket. If the Status parameter is set to Enabled, you must specify this parameter.
+     * @var ReplicationEncryptionConfiguration|null
+     */
+    #[XmlElement(rename: 'EncryptionConfiguration', type: ReplicationEncryptionConfiguration::class)]
+    public ?ReplicationEncryptionConfiguration $encryptionConfiguration;
+
+    /**
+     * The container that stores the status of the RTC feature.
+     * @var ReplicationTimeControl|null
+     */
+    #[XmlElement(rename: 'RTC', type: ReplicationTimeControl::class)]
+    public ?ReplicationTimeControl $rtc;
+
+    /**
+     * ReplicationRule constructor.
+     * @param string|null $status The status of the data replication task.
+     * @param ReplicationSourceSelectionCriteria|null $sourceSelectionCriteria The container that specifies other conditions used to filter the source objects that you want to replicate.
+     * @param string|null $id The ID of the rule.
+     * @param ReplicationPrefixSet|null $prefixSet The container that stores prefixes.
+     * @param string|null $action The operations that can be synchronized to the destination bucket.
+     * @param ReplicationDestination|null $destination The container that stores the information about the destination bucket.
+     * @param string|null $historicalObjectReplication Specifies whether to replicate historical data that exists before data replication is enabled from the source bucket to the destination bucket.
+     * @param string|null $syncRole The role that you want to authorize OSS to use to replicate data.
+     * @param ReplicationEncryptionConfiguration|null $encryptionConfiguration The encryption configuration for the objects replicated to the destination bucket.
+     * @param ReplicationTimeControl|null $rtc The container that stores the status of the RTC feature.
+     */
+    public function __construct(
+        ?string $status = null,
+        ?ReplicationSourceSelectionCriteria $sourceSelectionCriteria = null,
+        ?string $id = null,
+        ?ReplicationPrefixSet $prefixSet = null,
+        ?string $action = null,
+        ?ReplicationDestination $destination = null,
+        ?string $historicalObjectReplication = null,
+        ?string $syncRole = null,
+        ?ReplicationEncryptionConfiguration $encryptionConfiguration = null,
+        ?ReplicationTimeControl $rtc = null
+    )
+    {
+        $this->status = $status;
+        $this->sourceSelectionCriteria = $sourceSelectionCriteria;
+        $this->id = $id;
+        $this->prefixSet = $prefixSet;
+        $this->action = $action;
+        $this->destination = $destination;
+        $this->historicalObjectReplication = $historicalObjectReplication;
+        $this->syncRole = $syncRole;
+        $this->encryptionConfiguration = $encryptionConfiguration;
+        $this->rtc = $rtc;
+    }
+}

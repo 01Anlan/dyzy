@@ -1,0 +1,30 @@
+{
+    "name": "alibabacloud/oss-v2",
+    "description": "Aliyun OSS SDK for PHP v2",
+    "homepage": "https://github.com/aliyun/alibabacloud-oss-php-sdk-v2",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Alibaba Cloud OSS SDK",
+            "email": "sdk-team@alibabacloud.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-simplexml": "*",
+        "ext-json": "*",
+        "psr/http-message": "^1.0 || ^2.0",
+        "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
+        "guzzlehttp/psr7": "^2.7",
+        "guzzlehttp/promises": "^1.4.0 || ^2.0"
+    },
+    "require-dev" : {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "AlibabaCloud\\Oss\\V2\\": "src"
+        }
+    }
+}

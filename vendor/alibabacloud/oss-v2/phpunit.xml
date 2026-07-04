@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.2/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+    <report>
+      <clover outputFile="coverage.xml"/>
+    </report>
+  </coverage>
+  <logging/>
+  <testsuites>
+    <testsuite name="UnitTest">
+      <!-- for 7.x -->
+      <directory phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Exception</directory>
+      <directory phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Retry</directory>
+      <directory phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Signer</directory>
+      <directory phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Types</directory>
+      <directory phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Crypto</directory>
+      <directory phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Credentials</directory>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/ClientImplTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/UtilsTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/ValidationTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Transform/BucketBasicTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Transform/FunctionsTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Transform/ObjectMultipartTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/UnitTests/Transform/ObjectBasicTest.php</file>
+      <!-- for 8.x -->
+      <directory phpVersion="8.0.0">./tests/UnitTests/</directory>
+    </testsuite>
+    <testsuite name="IntegrationTests">
+      <!-- for 7.x -->
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientBucketBasicTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientObjectMultipartTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientMiscTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientExtensionTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientObjectBasicTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientPaginatorTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/ClientPresignerTest.php</file>
+      <file phpVersion="8.0.0" phpVersionOperator="lt">./tests/IntegrationTests/EncryptionClientTest.php</file>
+      <!-- for 8.x -->
+      <directory phpVersion="8.0.0">./tests/IntegrationTests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

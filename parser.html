@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抖音主页解析工具</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/vendor/fonts/local-fonts.css">
+    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/parser.css?v=2026070309">
+    <link rel="stylesheet" href="assets/css/ui.css?v=2026070309">
+    <style>
+        @media (max-width: 900px) {
+            .site-header {
+                display: grid !important;
+                grid-template-columns: 42px minmax(0, 1fr) !important;
+                align-items: start !important;
+                gap: 10px 12px !important;
+            }
+            .site-header > div:not(.logo-mark):not(.user-panel) {
+                min-width: 0 !important;
+            }
+            .site-header .user-panel {
+                grid-column: 1 / -1 !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                display: grid !important;
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 8px !important;
+            }
+            .site-header .user-panel span,
+            .site-header .user-panel .btn {
+                width: 100% !important;
+                min-width: 0 !important;
+                height: 36px !important;
+                justify-content: center !important;
+                padding: 0 8px !important;
+                font-size: 12px !important;
+                white-space: nowrap !important;
+            }
+        }
+        @media (max-width: 420px) {
+            .site-header .user-panel {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            .site-header .user-panel span {
+                grid-column: 1 / -1 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="help-fab" id="helpTrigger" title="使用说明">
+    <i class="fas fa-question"></i>
+</button>
+
+<div class="page-wrap">
+
+    <!-- Header -->
+    <div class="site-header">
+        <div class="logo-mark">
+            <i class="fab fa-tiktok"></i>
+        </div>
+        <div>
+            <h1>抖音主页解析工具</h1>
+            <p>提取视频链接 · 文件管理 · 自动更新 · 邮件通知</p>
+        </div>
+        <div class="user-panel">
+            <span id="userStatus"><i class="fas fa-user"></i> 未登录</span>
+            <a class="btn btn-ghost" href="account.php"><i class="fas fa-shield-halved"></i> 账号设置</a>
+            <button class="btn btn-ghost" id="logoutUserBtn" type="button"><i class="fas fa-right-from-bracket"></i> 退出</button>
+        </div>
+    </div>
+
+    <div class="browser-tabs">
+        <a class="browser-tab" href="single.php"><i class="fas fa-bolt"></i> 单作品解析</a>
+        <button class="browser-tab active" data-tab="homepagePanel"><i class="fas fa-link"></i> 主页解析</button>
+        <button class="browser-tab" data-tab="cookiePanel"><i class="fas fa-cookie-bite"></i> 点赞 / 收藏解析</button>
+        <a class="browser-tab" href="downloads.php"><i class="fas fa-download"></i> 下载中心</a>
+        <a class="browser-tab" href="settings.php"><i class="fas fa-gear"></i> 全局设置</a>
+    </div>
+
+    <!-- Alerts -->
+    <div class="alert alert-error" id="errorAlert">
+        <i class="fas fa-circle-exclamation"></i>
+        <span id="errorMsg"></span>
+    </div>
+    <div class="alert alert-success" id="successAlert">
+        <i class="fas fa-circle-check"></i>
+        <span id="successMsg"></span>
+    </div>
+
+    <div class="tab-panel active" id="homepagePanel">
+
+    <!-- Auto update status -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-rotate"></i>
+                自动更新状态
+            </div>
+            <div class="status-pill active">
+                <div class="dot"></div>
+                宝塔计划任务运行中
+            </div>
+        </div>
+
+        <div class="info-bar tip" style="margin-bottom:16px">
+            <i class="fas fa-circle-info"></i>
+            <span id="statusInfo">通过宝塔计划任务自动监控已开启自动更新的记录</span>
+        </div>
+
+        <div class="card-title" style="margin-bottom:12px">
+            <i class="fas fa-clock-rotate-left"></i>
+            最近更新记录
+        </div>
+        <div class="list-container" id="historyList">
+            <div class="empty-state">
+                <i class="fas fa-clock"></i>
+                <p>暂无更新记录</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="card-title" style="margin-bottom:10px">
+            <i class="fas fa-terminal"></i>
+            计划任务配置
+        </div>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:8px">任务类型：Shell脚本 &nbsp;·&nbsp; 推荐每30分钟执行一次</p>
+        <div class="code-block" id="auto-domain-path">cd /www/wwwroot/YOUR_DOMAIN/
+/usr/bin/php tasks/cron_auto_update.php</div>
+        <button class="btn" onclick="copyCommand()">
+            <i class="fas fa-copy"></i> 复制命令
+        </button>
+    </div>
+
+    <!-- Email notification -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-envelope"></i>
+                邮件通知设置
+            </div>
+        </div>
+
+        <div class="toggle-row" style="margin-bottom:16px">
+            <label class="toggle-switch">
+                <input type="checkbox" id="emailNotification">
+                <div class="toggle-track"></div>
+                <div class="toggle-thumb"></div>
+            </label>
+            <span>启用邮件通知</span>
+        </div>
+
+        <div id="emailSettings" style="display:none">
+            <div class="field-row">
+                <div class="field">
+                    <label>接收邮箱</label>
+                    <input type="email" id="emailAddress" placeholder="your@email.com">
+                </div>
+                <div class="field">
+                    <label>通知条件</label>
+                    <select id="emailCondition">
+                        <option value="new_content">只有新内容时通知</option>
+                        <option value="always">每次检查都通知</option>
+                        <option value="error">只有出错时通知</option>
+                    </select>
+                </div>
+            </div>
+            <div class="info-bar tip" style="margin-top:14px">
+                <i class="fas fa-circle-info"></i>
+                <div>SMTP 服务器、发件账号和授权码由后台管理员统一配置，当前页面只需填写接收邮箱。</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parse form -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-link"></i>
+                解析链接
+            </div>
+        </div>
+
+        <div class="info-bar tip" style="margin-bottom:16px">
+            <i class="fas fa-circle-info"></i>
+            <div>
+                如果多次解析失败，请尝试更换抖音主页链接。
+                <a id="showHelp">查看使用说明</a>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>抖音主页链接</label>
+            <div class="input-wrap">
+                <i class="fas fa-paste input-icon"></i>
+                <input type="text" id="douyinUrl" class="with-icon" placeholder="https://v.douyin.com/xxxxx/">
+            </div>
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                <label>自定义文件名（可选）</label>
+                <div class="input-wrap">
+                    <i class="fas fa-file input-icon"></i>
+                    <input type="text" id="fileName" class="with-icon" placeholder="video_links">
+                </div>
+            </div>
+            <div class="field">
+                <label>解析类型</label>
+                <select id="parseType">
+                    <option value="1">解析视频</option>
+                    <option value="2">解析图片</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>自动更新</label>
+            <select id="autoUpdateOption">
+                <option value="0">不自动更新</option>
+                <option value="1">启用自动更新</option>
+            </select>
+        </div>
+
+        <div class="info-bar warn" style="margin-bottom:14px">
+            <i class="fas fa-clock"></i>
+            <span>视频数量较多时解析可能需要较长时间，请耐心等待</span>
+        </div>
+
+        <button class="btn btn-primary" id="parseBtn">
+            <i class="fas fa-wand-magic-sparkles"></i> 开始解析
+        </button>
+
+        <div class="loading-state" id="loading">
+            <div class="spinner"></div>
+            <span>正在解析链接，请稍候...</span>
+        </div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="resultContainer">
+        <div class="result-header">
+            <i class="fas fa-circle-check"></i>
+            <span>解析成功</span>
+            <span class="result-count" id="videoCount">0 个链接</span>
+        </div>
+        <div class="result-body">
+            <div>
+                <div class="result-filename" id="fileNameDisplay">video_links.txt</div>
+                <div class="result-meta">包含 <span id="linkCount">0</span> 个视频链接</div>
+            </div>
+            <div class="result-actions">
+                <button class="btn" id="downloadBtn">
+                    <i class="fas fa-download"></i> 下载
+                </button>
+                <button class="btn" id="copyBtn">
+                    <i class="fas fa-copy"></i> 复制链接
+                </button>
+                <button class="btn" id="watchBtn">
+                    <i class="fas fa-play"></i> 观看
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Records -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-database"></i>
+                解析记录
+                <span class="badge" id="recordsCount">0</span>
+            </div>
+            <div class="card-actions">
+                <button class="btn btn-ghost" id="refreshRecordsBtn">
+                    <i class="fas fa-rotate"></i> 刷新
+                </button>
+            </div>
+        </div>
+        <div class="list-container" id="recordsList">
+            <div class="empty-state">
+                <i class="fas fa-database"></i>
+                <p>暂无解析记录</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- File manager -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-folder-open"></i>
+                文件管理
+                <span class="badge" id="fileCount">0</span>
+            </div>
+            <div class="card-actions">
+                <button class="btn btn-ghost" id="refreshBtn">
+                    <i class="fas fa-rotate"></i> 刷新
+                </button>
+                <button class="btn btn-ghost" id="cleanupBtn">
+                    <i class="fas fa-broom"></i> 清理
+                </button>
+            </div>
+        </div>
+
+        <div class="cleanup-bar">
+            <span>自动清理</span>
+            <select id="cleanupHours">
+                <option value="1">1小时前的文件</option>
+                <option value="6">6小时前的文件</option>
+                <option value="24" selected>24小时前的文件</option>
+                <option value="72">3天前的文件</option>
+                <option value="168">7天前的文件</option>
+                <option value="720">30天前的文件</option>
+            </select>
+        </div>
+
+        <div class="list-container" id="fileList">
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <p>暂无文件，解析链接后将显示在这里</p>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <div class="tab-panel" id="cookiePanel">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-cookie-bite"></i>
+                    点赞 / 收藏解析
+                </div>
+            </div>
+
+            <div class="info-bar tip" style="margin-bottom:16px">
+                <i class="fas fa-circle-info"></i>
+                <div>提交任务后会提示“任务已提交，解析完成后将邮件通知”，前端自动轮询状态，完成后自动下载 TXT 并同步到文件管理。</div>
+            </div>
+
+            <div class="info-bar warn" style="margin-bottom:16px">
+                <i class="fas fa-triangle-exclamation"></i>
+                <div>
+                    <strong>使用限制：</strong>点赞 / 收藏解析仅支持解析当前登录账号自己的“喜欢作品”或“收藏作品”，Cookie 也必须使用你本人账号登录状态下获取。
+                </div>
+            </div>
+
+            <div class="info-bar tip" style="margin-bottom:16px">
+                <i class="fas fa-book-open"></i>
+                <div>
+                    <strong>Cookie 获取说明：</strong>建议使用浏览器无痕模式登录抖音账号后获取，这样拿到的 Cookie 通常更完整、更稳定。按 <code>F12</code> 打开开发者工具，进入“网络 / Network”，刷新页面后找到以 <code>feed</code> 开头的请求，打开该请求并复制其中完整的 <code>Cookie</code> 请求头内容，重点确认包含 <code>odin_tt</code> 字段。
+                    <a href="javascript:void(0)" id="showCookieHelp" style="margin-left:8px">查看图片教程</a>
+                </div>
+            </div>
+
+            <div class="info-bar tip" style="margin-bottom:16px">
+                <i class="fas fa-user-shield"></i>
+                <div id="personalCookieStatus">个人 Cookie 未保存；保存后当前用户的主页解析、点赞和收藏解析都会优先使用它。</div>
+            </div>
+
+            <div class="field">
+                <label>抖音登录 Cookie</label>
+                <div class="input-wrap">
+                    <i class="fas fa-key input-icon"></i>
+                    <input type="text" id="accountCookie" class="with-icon" placeholder="粘贴抖音登录 Cookie，可保存到当前用户账号">
+                </div>
+            </div>
+            <div class="btn-row" style="margin-bottom:14px">
+                <button class="btn" id="savePersonalCookieBtn" type="button">
+                    <i class="fas fa-floppy-disk"></i> 保存个人 Cookie
+                </button>
+                <button class="btn btn-ghost" id="clearCookieInputBtn" type="button">
+                    <i class="fas fa-eraser"></i> 清空输入框
+                </button>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>解析模式</label>
+                    <select id="accountMode">
+                        <option value="favorite">喜欢作品</option>
+                        <option value="collection">收藏作品</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>内容类型</label>
+                    <select id="accountType">
+                        <option value="1">视频</option>
+                        <option value="2">图集</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>导出文件名</label>
+                    <input type="text" id="accountFilename" placeholder="我的收藏">
+                </div>
+                <div class="field">
+                    <label>QQ邮箱（可选）</label>
+                    <input type="email" id="accountEmail" placeholder="your@qq.com">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="accountParseBtn" type="button">
+                <i class="fas fa-cloud-arrow-up"></i> 提交解析任务
+            </button>
+            <div class="result-meta" id="accountInlineStatus" style="margin-top:10px">等待提交任务</div>
+
+            <div class="loading-state" id="accountLoading">
+                <div class="spinner"></div>
+                <span id="accountLoadingText">任务提交中...</span>
+            </div>
+        </div>
+
+        <div class="result-card" id="accountResultContainer">
+            <div class="result-header">
+                <i class="fas fa-envelope-circle-check"></i>
+                <span id="accountResultTitle">任务已提交</span>
+                <span class="result-count" id="accountStatusBadge">queued</span>
+            </div>
+            <div class="result-body">
+                <div>
+                    <div class="result-filename" id="accountFileNameDisplay">等待生成文件</div>
+                    <div class="result-meta" id="accountResultMeta">解析完成后将邮件通知并同步到文件管理</div>
+                </div>
+                <div class="result-actions">
+                    <button class="btn" id="accountDownloadBtn">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                    <button class="btn" id="accountWatchBtn">
+                        <i class="fas fa-play"></i> 观看
+                    </button>
+                    <button class="btn" id="accountCopyBtn">
+                        <i class="fas fa-copy"></i> 复制链接
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /page-wrap -->
+
+<!-- Help Modal -->
+<div class="modal-bg" id="helpModalBg">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>使用说明</h3>
+            <button class="modal-close" id="closeHelpModal"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="info-bar warn" style="margin-bottom:16px">
+                <i class="fas fa-triangle-exclamation"></i>
+                <div><strong>重要提示：</strong>如果多次解析失败，请更换抖音主页链接。某些链接可能由于平台限制无法正常解析。</div>
+            </div>
+            <ul class="tips-list">
+                <li><strong>解析失败怎么办？</strong>请尝试更换其他抖音主页链接，建议使用抖音短链接格式（v.douyin.com）。</li>
+                <li><strong>为什么解析时间很长？</strong>主页视频超过50个时，解析可能需要30秒到2分钟，请耐心等待，不要刷新页面。</li>
+                <li><strong>支持的链接格式</strong><br>· https://v.douyin.com/xxxxx/<br>· https://www.douyin.com/user/xxxx</li>
+                <li><strong>文件保存位置</strong>所有解析文件保存在服务器的 <code>downloads</code> 文件夹。</li>
+                <li><strong>自动清理功能</strong>可清理指定时间前生成的文件，避免占用过多空间。</li>
+                <li><strong>自动更新功能</strong>通过宝塔计划任务监控抖音主页，只有发现新内容时才更新文件并发送邮件。</li>
+                <li><strong>邮件通知</strong>需正确配置SMTP服务器信息后方可发送通知邮件。</li>
+                <li><strong>数据库记录</strong>每次解析都会保存到数据库，可单独管理每个链接的自动更新设置。</li>
+            </ul>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-primary" style="width:auto;padding:0 24px" id="understandBtn">
+                <i class="fas fa-check"></i> 知道了
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal-bg" id="previewModalBg">
+    <div class="modal">
+        <div class="modal-head">
+            <h3 id="previewTitle">文件预览</h3>
+            <button class="modal-close" id="closePreviewModal"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="preview-content" id="filePreviewContent">加载中...</div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn" onclick="downloadPreviewFile()">
+                <i class="fas fa-download"></i> 下载此文件
+            </button>
+            <button class="btn btn-primary" style="width:auto;padding:0 24px" id="closePreviewBtn">
+                <i class="fas fa-xmark"></i> 关闭
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Help Modal -->
+<div class="modal-bg" id="cookieHelpModalBg">
+    <div class="modal">
+        <div class="modal-head">
+            <h3>Cookie 图片教程</h3>
+            <button class="modal-close" id="closeCookieHelpModal"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="info-bar tip" style="margin-bottom:16px">
+                <i class="fas fa-circle-info"></i>
+                <div>打开浏览器开发者工具后，按说明找到 <code>feed</code> 请求，并复制完整 <code>Cookie</code> 请求头内容。</div>
+            </div>
+            <img src="assets/images/dycookie.jpg" alt="Cookie 获取教程" style="width:100%;border-radius:12px;border:1px solid var(--border);display:block;">
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-primary" style="width:auto;padding:0 24px" id="closeCookieHelpBtn">
+                <i class="fas fa-check"></i> 知道了
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/app-console.js"></script>
+<script src="assets/js/parser.js"></script>
+</body>
+</html>

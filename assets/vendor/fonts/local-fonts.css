@@ -1,0 +1,2 @@
+/* 本地字体回退：替代 Google Fonts 外链，避免页面依赖外部字体服务。 */
+:root { --app-font-sans: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; --app-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }

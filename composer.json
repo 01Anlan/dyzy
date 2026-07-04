@@ -1,0 +1,8 @@
+{
+    "require": {
+        "alibabacloud/oss-v2": "^0.4.0",
+        "phpmailer/phpmailer": "^7.1",
+        "qcloud/cos-sdk-v5": "^2.6",
+        "volcengine/ve-tos-php-sdk": "^2.1"
+    }
+}

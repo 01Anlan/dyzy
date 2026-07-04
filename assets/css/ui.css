@@ -1,0 +1,310 @@
+/* Shared UI polish layered after page-specific styles. */
+:root {
+    --ui-focus-ring: 0 0 0 3px rgba(26, 25, 23, 0.08);
+    --ui-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    text-rendering: optimizeLegibility;
+}
+
+a,
+button,
+.btn,
+.browser-tab,
+.file-card,
+.file-item,
+.media-item,
+.link-btn,
+.page-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn,
+.browser-tab,
+.page-btn,
+.link-btn {
+    transition: transform var(--transition, 0.18s ease), border-color var(--transition, 0.18s ease), background var(--transition, 0.18s ease), color var(--transition, 0.18s ease), box-shadow var(--transition, 0.18s ease), opacity var(--transition, 0.18s ease);
+}
+
+.btn:not(.btn-sm):not(.table-action),
+.browser-tab,
+.page-btn {
+    min-height: 40px;
+}
+
+.btn-sm,
+.table-action {
+    min-height: 32px;
+}
+
+.btn:hover,
+.browser-tab:hover,
+.page-btn:hover,
+.link-btn:hover {
+    box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.06));
+}
+
+.btn:focus-visible,
+.browser-tab:focus-visible,
+.page-btn:focus-visible,
+.link-btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: var(--ui-focus-ring);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    background: var(--surface, #fff);
+    box-shadow: var(--ui-focus-ring);
+}
+
+.section-nav {
+    display: flex;
+    gap: 8px;
+    margin: -4px 0 16px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+}
+
+.section-nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.07));
+    border-radius: 999px;
+    background: var(--surface, #fff);
+    color: var(--text-2, #6b6a67);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.06));
+    transition: transform var(--transition, 0.18s ease), border-color var(--transition, 0.18s ease), background var(--transition, 0.18s ease), color var(--transition, 0.18s ease), box-shadow var(--transition, 0.18s ease);
+}
+
+.section-nav a:hover {
+    border-color: var(--border-strong, rgba(0, 0, 0, 0.12));
+    color: var(--text-1, #1a1917);
+    transform: translateY(-1px);
+}
+
+.card,
+.hero,
+.footer,
+.file-card,
+.link-table {
+    transition: box-shadow var(--transition, 0.18s ease), transform var(--transition, 0.18s ease), border-color var(--transition, 0.18s ease);
+}
+
+.card:hover,
+.hero:hover,
+.file-card:hover {
+    border-color: var(--border-strong, rgba(0, 0, 0, 0.12));
+}
+
+.site-header {
+    min-width: 0;
+}
+
+.site-header > div:not(.logo-mark):not(.user-panel) {
+    min-width: 0;
+}
+
+.site-header h1,
+.site-header p,
+.file-name,
+.item-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.breadcrumb,
+.browser-tabs,
+.section-nav,
+.btn-row,
+.actions,
+.hero-actions,
+.content-tools,
+.file-actions,
+.batch-controls {
+    scrollbar-width: thin;
+}
+
+.table-wrap,
+.link-table,
+.file-list,
+.media-list,
+.list-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong, rgba(0, 0, 0, 0.12)) transparent;
+}
+
+.card[id] {
+    scroll-margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+    body {
+        padding: 20px 14px 48px;
+    }
+
+    .site-header {
+        display: grid !important;
+        grid-template-columns: 42px minmax(0, 1fr) !important;
+        align-items: start !important;
+        gap: 10px 12px !important;
+        margin-bottom: 20px;
+    }
+
+    .site-header > div:not(.logo-mark):not(.user-panel) {
+        min-width: 0 !important;
+    }
+
+    .site-header .user-panel {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .site-header .user-panel span,
+    .site-header .user-panel .btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 36px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 8px !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+    }
+
+    .site-header h1 {
+        font-size: 18px;
+        line-height: 1.3;
+    }
+
+    .site-header p {
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: normal;
+    }
+
+    .hero,
+    .card,
+    .footer,
+    .file-card {
+        border-radius: var(--radius-lg, 16px);
+        padding: 18px;
+    }
+
+    .hero-actions,
+    .actions,
+    .btn-row,
+    .content-tools,
+    .file-actions,
+    .batch-controls {
+        gap: 8px;
+    }
+
+    .hero-actions .btn,
+    .actions .btn,
+    .btn-row .btn,
+    .content-tools .btn {
+        flex: 1 1 160px;
+    }
+
+    .field-row,
+    .grid,
+    .layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .file-actions,
+    .batch-controls {
+        flex-wrap: wrap;
+    }
+
+    .file-card,
+    .file-info {
+        align-items: flex-start;
+    }
+
+    .file-card {
+        flex-direction: column;
+    }
+
+    .file-actions {
+        width: 100%;
+    }
+
+    .file-actions .btn {
+        flex: 1 1 130px;
+    }
+
+    .breadcrumb,
+    .browser-tabs,
+    .section-nav {
+        overflow-x: auto;
+        padding-bottom: 4px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-inline: 12px;
+    }
+
+    .site-header .user-panel {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .site-header .user-panel span {
+        grid-column: 1 / -1 !important;
+    }
+
+    .logo-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+    }
+
+    .hero,
+    .card,
+    .footer,
+    .file-card {
+        padding: 16px;
+    }
+
+    .btn,
+    .browser-tab,
+    .page-btn {
+        width: 100%;
+    }
+
+    .browser-tab,
+    .page-btn,
+    .link-btn {
+        width: auto;
+    }
+}
