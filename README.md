@@ -1,179 +1,245 @@
-# 抖音主页解析工具
+# 抖音解析工具 (Douyin Parser Tool)
 
-🎯 【正在重构】抖音主页内容自动监控与解析系统
+> 抖音链接解析与账号内容导出服务平台 — 支持单作品解析、主页作品/点赞/收藏批量导出、自动更新监控、对象存储集成
 
-[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/01Anlan/dyzy.svg)](https://github.com/01Anlan/dyzy/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/01Anlan/dyzy.svg)](https://github.com/01Anlan/dyzy/network)
+## 📋 功能概览
 
-一个功能强大的抖音主页内容自动监控系统，支持实时内容更新检测、邮件通知、自动化下载和数据库管理。
+| 功能 | 说明 |
+|------|------|
+| **单作品解析** | 解析单个抖音视频/图文/实况图，获取播放地址、封面、音乐等信息 |
+| **主页作品解析** | 批量解析指定抖音用户主页的所有作品 |
+| **点赞作品解析** | 解析用户点赞过的作品列表 |
+| **收藏作品解析** | 解析用户收藏的作品列表 |
+| **自动更新监控** | 定时检测已解析账号的新作品，增量更新并邮件通知 |
+| **文件管理** | 在线预览、下载、删除已生成的链接文件 |
+| **下载代理** | 代理下载抖音视频/图片资源到本地服务器 |
+| **对象存储集成** | 支持阿里云 OSS、腾讯云 COS、火山引擎 TOS、S3 兼容存储 |
+| **邮件通知** | SMTP 邮件发送，支持注册验证码、自动更新通知 |
+| **用户系统** | 注册/登录/密码重置，独立 Cookie 管理，解析记录管理 |
 
-## ✨ 核心特性
+## 🏗️ 项目结构
 
-### 🚀 主要功能
-- **🔄 智能解析** - 自动解析抖音主页视频和图片链接
-- **📧 邮件通知** - 支持SMTP邮件通知，多种触发条件
-- **💾 自动下载** - 发现新内容自动保存到本地文件
-- **📊 状态监控** - 实时查看系统运行状态和历史记录
-- **🛡️ 自动更新** - 基于计划任务的自动内容更新监控
-
-### 🎨 用户体验
-- **📱 响应式界面** - 完美适配桌面和移动设备
-- **🎯 精美邮件模板** - 专业的SVG图标和现代化设计
-- **⚙️ 灵活配置** - 支持自定义监控间隔和文件命名
-- **🔍 文件预览** - 在线预览已保存的文件内容
-
-### 🔧 技术特性
-- **💽 数据库存储** - 使用MySQL数据库存储解析记录和配置
-- **📨 多邮件支持** - 集成PHPMailer和备用邮件方案
-- **🛡️ 错误处理** - 完善的异常处理和日志记录系统
-- **🔒 安全防护** - 文件路径安全检查和输入验证
-
-## 🛠️ 系统架构
-
-### 核心文件说明
-
-| 文件 | 功能描述 |
-|------|----------|
-| `index.php` | 主界面，提供用户交互界面 |
-| `Douyin.php` | 抖音链接解析核心功能 |
-| `auto_update.php` | 自动更新管理接口 |
-| `cron_auto_update.php` | 计划任务执行脚本 |
-| `file_manager.php` | 文件管理功能 |
-| `manage_records.php` | 解析记录管理 |
-| `file_preview.php` | 文件预览功能 |
-| `config.php` | 数据库配置 |
-| `install.php` | 安装程序 |
-
-### 数据库结构
-
-```sql
--- 解析记录表 (parse_records)
--- 自动更新日志表 (auto_update_logs)  
--- 邮件配置表 (email_configs)
-🛠️ 安装部署
-
-环境要求
-
-· PHP 7.4 或更高版本
-· 支持cURL扩展
-· 邮件服务（SMTP）
-
-快速开始
-
-1. 克隆项目
-
-```bash
-git clone https://github.com/01Anlan/dyzy.git
-cd dyzy
+```
+├── index.php                 # 导航首页
+├── parser.html               # 主页解析页面
+├── single.php                # 单作品解析页面
+├── watch.php                 # 自动更新监控页面
+├── account.php               # 账号管理页面
+├── settings.php              # 后台管理页面
+├── user.php                  # 用户中心页面
+├── login.php                 # 登录页面
+├── register.php              # 注册页面
+├── forgot.php                # 忘记密码页面
+├── downloads.php             # 下载管理页面
+├── config.php                # 数据库配置
+├── composer.json             # Composer 依赖
+│
+├── api/                      # API 接口层
+│   ├── Douyin.php            # 核心解析入口（单作品/主页/点赞/收藏）
+│   ├── douyin_common.php     # 通用解析函数（HTTP请求、URL处理、数据提取）
+│   ├── douyin_single.php     # 单作品解析逻辑
+│   ├── douyin_account.php    # 账号内容解析逻辑
+│   ├── AccountCookie.php     # 账号 Cookie 管理接口
+│   ├── auth_api.php          # 认证接口（登录/登出/初始化）
+│   ├── user_api.php          # 用户接口（注册/更新/邮箱绑定）
+│   ├── settings_api.php      # 全局设置接口（Cookie 管理）
+│   ├── file_manager.php      # 文件管理接口（列表/预览/下载/删除）
+│   ├── file_preview.php      # 文件预览接口（视频/图片在线预览）
+│   ├── download_proxy.php    # 下载代理接口
+│   ├── server_save.php       # 服务器端保存接口
+│   ├── manage_records.php    # 解析记录管理接口
+│   └── auto_update.php       # 自动更新接口
+│
+├── includes/                 # 核心库
+│   ├── auth.php              # 认证系统（会话/CSRF/管理员/用户认证）
+│   ├── email.php             # 邮件发送（PHPMailer 封装）
+│   └── storage.php           # 对象存储配置管理
+│
+├── assets/                   # 前端资源
+│   ├── css/                  # 样式文件
+│   │   ├── index.css         # 首页样式
+│   │   ├── parser.css        # 解析页面样式
+│   │   ├── watch.css         # 监控页面样式
+│   │   ├── settings.css      # 后台管理样式
+│   │   ├── downloads.css     # 下载管理样式
+│   │   ├── install.css       # 安装页面样式
+│   │   ├── ui.css            # 通用 UI 组件样式
+│   │   └── source-guardian.css
+│   └── js/                   # JavaScript 文件
+│       ├── parser.js         # 解析页面逻辑
+│       ├── watch.js          # 监控页面逻辑
+│       ├── auth.js           # 认证逻辑
+│       ├── account.js        # 账号管理逻辑
+│       ├── settings.js       # 后台设置逻辑
+│       ├── single.js         # 单作品解析逻辑
+│       ├── user.js           # 用户中心逻辑
+│       ├── downloads.js      # 下载管理逻辑
+│       ├── install.js        # 安装逻辑
+│       └── app-console.js    # 应用控制台
+│
+├── data/                     # 数据存储
+│   ├── admin.php             # 管理员配置
+│   ├── settings.php          # 全局设置（Cookie 等）
+│   └── storage.php           # 对象存储配置
+│
+├── downloads/                # 下载文件目录
+│   ├── sessions/             # 会话下载目录
+│   └── users/                # 用户下载目录
+│
+├── install/                  # 安装程序
+│   ├── install.php           # 安装向导页面
+│   ├── install_ajax.php      # 安装 AJAX 接口
+│   └── database.sql          # 数据库建表 SQL
+│
+├── tasks/                    # 计划任务
+│   └── cron_auto_update.php  # 自动更新计划任务脚本
+│
+├── logs/                     # 日志目录
+├── system/                   # 系统文件
+└── vendor/                   # Composer 依赖包
 ```
 
-1. 配置环境
+## 🚀 快速开始
+
+### 环境要求
+
+- PHP 8.0+
+- MySQL 5.7+ / MariaDB 10.3+
+- PDO MySQL 扩展
+- cURL 扩展
+- Composer（用于安装依赖）
+
+### 安装步骤
+
+1. **克隆项目到 Web 目录**
 
 ```bash
-# 确保服务器支持PHP和cURL
-# 检查PHP版本
-php -v
-
-# 检查cURL扩展
-php -m | grep curl
+git clone https://github.com/your-username/douyin-parser.git
+cd douyin-parser
 ```
 
-1. 配置邮件服务
+2. **安装 Composer 依赖**
 
-· 编辑配置文件设置SMTP参数
-· 配置发件人邮箱和授权码
-· 测试邮件发送功能
-
-1. 访问应用
-
-· 将项目部署到Web服务器
-· 通过浏览器访问首页
-· 开始配置监控任务
-
-📖 使用说明
-
-基本配置
-
-1. 设置监控链接
-   · 输入要监控的抖音主页链接
-   · 支持多种抖音链接格式
-2. 配置监控参数
-   · 设置检查间隔（5分钟到24小时）
-   · 选择监控类型（视频/图片）
-   · 自定义保存文件名
-3. 启用邮件通知
-   · 配置SMTP服务器信息
-   · 设置通知条件
-   · 测试邮件功能
-
-高级功能
-
-· 自动清理 - 定期清理旧文件释放空间
-· 历史记录 - 查看所有监控操作记录
-· 状态监控 - 实时显示系统运行状态
-
-⚙️ 配置文件
-
-主要配置文件说明：
 ```bash
-// config.php
-$config = [
-    'smtp_host' => 'smtp.qq.com',
-    'smtp_port' => 465,
-    'smtp_secure' => 'ssl',
-    'smtp_username' => 'your-email@qq.com',
-    'smtp_password' => 'your-auth-code'
-];
+composer install
 ```
-🔧 故障排除
 
-常见问题
+3. **配置 Web 服务器**
 
-Q: 监控任务无法启动？
-A:检查PHP环境和文件权限，确保logs目录可写。
+   将 Web 服务器根目录指向项目目录，确保以下目录可写：
+   - `data/`
+   - `downloads/`
+   - `logs/`
 
-Q: 收不到邮件通知？
-A:验证SMTP配置，检查邮箱的垃圾邮件文件夹。
+4. **访问安装向导**
 
-Q: 解析失败？
-A:尝试更换抖音主页链接，确保链接格式正确。
+   在浏览器中访问 `http://your-domain/install/install.php`，按照向导完成：
+   - 创建数据库
+   - 导入表结构
+   - 初始化管理员账号
 
-日志查看
+5. **完成安装**
 
-系统运行日志保存在 logs/ 目录下，可帮助诊断问题。
+   安装完成后，`install/install.lock` 文件会自动生成，安装目录可安全删除。
 
-🤝 贡献指南
+### 计划任务配置
 
-欢迎提交 Issue 和 Pull Request！
+如需自动更新监控功能，添加以下 crontab：
 
-1. Fork 本仓库
-2. 创建特性分支 (git checkout -b feature/AmazingFeature)
-3. 提交更改 (git commit -m 'Add some AmazingFeature')
-4. 推送到分支 (git push origin feature/AmazingFeature)
-5. 开启 Pull Request
+```bash
+# 每30分钟执行一次自动更新检查
+*/30 * * * * php /path/to/tasks/cron_auto_update.php --token=YOUR_CRON_TOKEN
+```
 
-📄 许可证
+`CRON_TOKEN` 可在用户中心生成。
 
-本项目采用 MIT 许可证 - 查看 LICENSE 文件了解详情。
+## 🔧 配置指南
 
-✉️ 联系作者
+### 抖音 Cookie 配置
 
-· 提交 Issue: GitHub Issues
-· 邮箱联系: zhcnli@qq.com
+解析用户主页/点赞/收藏内容需要提供有效的抖音 Cookie：
 
-🙏 致谢
+1. 登录抖音网页版（https://www.douyin.com）
+2. 打开浏览器开发者工具（F12）
+3. 在 Network 标签中复制任意请求的 `Cookie` 请求头
+4. 在后台管理 → Cookie 设置中粘贴保存
 
-感谢以下开源项目：
+### 对象存储配置
 
-· PHPMailer - 邮件发送功能
-· 其他依赖项...
+支持以下云存储服务：
+
+| 服务 | Provider 值 | SDK |
+|------|-------------|-----|
+| 阿里云 OSS | `oss` | `alibabacloud/oss-v2` |
+| 腾讯云 COS | `cos` | `qcloud/cos-sdk-v5` |
+| 火山引擎 TOS | `tos` | `volcengine/ve-tos-php-sdk` |
+| S3 兼容存储 | `s3` | AWS S3 SDK |
+
+### 邮件通知配置
+
+支持 SMTP 邮件发送，用于：
+- 注册验证码
+- 密码重置
+- 自动更新通知
+
+## 🛡️ 安全特性
+
+- **CSRF 防护**：所有写操作接口均验证 CSRF Token
+- **会话安全**：HttpOnly + SameSite=Lax Cookie，HTTPS 自动启用 Secure 标志
+- **Cookie 安全存储**：管理员 Cookie 以 `<?php exit; ?>` 前缀加密存储，防止直接访问
+- **域名白名单**：下载代理仅允许抖音相关域名资源
+- **文件路径防护**：文件名严格过滤，防止路径穿越攻击
+- **密码安全**：使用 `password_hash()` 加密存储
+- **邮箱验证码**：60 秒发送间隔限制，10 分钟有效期
+
+## 📄 输出文件格式
+
+### 视频链接文件 (`*_videos.txt`)
+
+```
+标题: 作品标题
+作者: 作者昵称
+播放地址: https://...
+封面地址: https://...
+音乐标题: 背景音乐
+音乐作者: 音乐作者
+音乐链接: https://...
+---
+标题: 下一个作品
+...
+```
+
+### 图片链接文件 (`*_images.txt`)
+
+```
+标题: 作品标题
+作者: 作者昵称
+图片地址: https://...
+封面地址: https://...
+音乐标题: 背景音乐
+---
+标题: 下一个作品
+...
+```
+
+## 📦 依赖
+
+- [`phpmailer/phpmailer`](https://github.com/PHPMailer/PHPMailer) — 邮件发送
+- [`alibabacloud/oss-v2`](https://github.com/aliyun/aliyun-oss-php-sdk) — 阿里云 OSS SDK
+- [`qcloud/cos-sdk-v5`](https://github.com/tencentyun/cos-php-sdk-v5) — 腾讯云 COS SDK
+- [`volcengine/ve-tos-php-sdk`](https://github.com/volcengine/ve-tos-php-sdk) — 火山引擎 TOS SDK
+
+## 📝 日志
+
+- `logs/douyin_debug.log` — 抖音 API 调试日志
+- `logs/cron_auto_update.log` — 自动更新计划任务日志
+- `logs/auth.log` — 认证日志
+- `logs/auth_cache.json` — 认证缓存
+
+## ⚖️ 许可证
+
+本项目仅供学习和研究使用。使用本工具解析抖音内容时，请遵守抖音平台的服务条款和相关法律法规。
 
 ---
 
-如果这个项目对你有帮助，请给个 ⭐ 星标支持！
-
-
-
-
+> **免责声明**：本工具仅用于技术学习和研究，不得用于任何商业用途或非法目的。使用者应自行承担使用风险。
