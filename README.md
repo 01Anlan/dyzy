@@ -114,8 +114,8 @@
 1. **克隆项目到 Web 目录**
 
 ```bash
-git clone https://github.com/your-username/douyin-parser.git
-cd douyin-parser
+git clone https://github.com/your-username/dyzy.git
+cd dyzy
 ```
 
 2. **安装 Composer 依赖**
